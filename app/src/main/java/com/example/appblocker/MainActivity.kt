@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
                                 timeSpentInApp = 0
                             }
                         } else {
-                            timeSpentInApp = 0 // Reset if the user switches to another app
+                            timeSpentInApp = 0
                         }
                     }
                     handler.postDelayed(this, 1000)
@@ -94,8 +94,6 @@ class MainActivity : ComponentActivity() {
 
             showNotificationWithCountdown()
         }
-
-        // Redirect the user to the app
         private fun redirectToApp() {
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -104,12 +102,10 @@ class MainActivity : ComponentActivity() {
 
         }
 
-        // Show a notification with a countdown
         private fun showNotificationWithCountdown() {
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val channelId = "tracking_channel"
 
-            // Create a notification channel for Android 8.0 and above
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 val channel = NotificationChannel(channelId, "App Blocker", NotificationManager.IMPORTANCE_HIGH).apply {
                     description = "Notification for app tracking"
@@ -123,15 +119,14 @@ class MainActivity : ComponentActivity() {
             val builder = NotificationCompat.Builder(this, channelId)
                 .setContentTitle("App Usage Tracker")
                 .setContentText("Monitoring your app usage...")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)  // Ensure you have a valid icon
-                .setOngoing(true)  // Makes the notification ongoing, so the user cannot swipe it away
-                .setPriority(NotificationCompat.PRIORITY_HIGH)  // Make sure the priority is high
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setOngoing(true)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-            // Show the notification
+
             notificationManager.notify(1, builder.build())
         }
 
-    // Handle app lifecycle to stop monitoring when app is paused
         override fun onPause() {
             super.onPause()
             handler.removeCallbacks(runnable)
